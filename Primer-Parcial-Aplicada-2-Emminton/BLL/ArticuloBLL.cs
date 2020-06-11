@@ -80,7 +80,7 @@ namespace Primer_Parcial_Aplicada_2_Emminton.BLL
             return paso;
         }
 
-        public static bool Elimminar(int id)
+        public static bool Eliminar(int id)
         {
             bool paso = false;
             Contexto db = new Contexto();
