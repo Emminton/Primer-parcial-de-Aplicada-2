@@ -1,0 +1,130 @@
+﻿@page "/Consultas"
+
+@using Primer_Parcial_Aplicada_2_Emminton.BLL
+@using Primer_Parcial_Aplicada_2_Emminton.Models
+   
+
+@inject IToastService toast
+
+<EditForm Model="lista">
+    <DataAnnotationsValidator />
+    <div class="card">
+        <div class="card-header">
+            <h3>Consultas De Articulos</h3>
+        </div>
+
+        <div class="card-body">
+            <div class="input-group mb-4">
+                <div class="input-group">
+                    <label for="filtro">Filtro: </label>
+                    <select class="form-control ml-3 mr-3" @bind="Filtro">
+                        <option value="" disabled selected>Seleccione un filtro</option>
+                        <option value="Todo">Todo</option>
+                        <option value="Id">ID</option>
+                        <option value="Descripcion">Descripcion</option>
+                    </select>
+
+                    <label for="criterio ml-3 mr-3"> Criterio: </label>
+                    <input type="search" class="form-control ml-3 mr-3" @bind-value="Criterio" />
+
+                    <button type="button" class="btn btn-primary" @onclick="Buscar">Buscar </button>
+                </div>
+            </div>
+
+            <table class=" table mb-3 mt-3">
+                <thead class="thead-light">
+                    <tr>
+                        <th>ID</th>
+                        <th>Descripción</th>
+                        <th>Existencia</th>
+                        <th>Costo</th>
+                        <th>Valor Inventario</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in lista)
+                    {
+                        <tr class="table-striped">
+                            <td>@item.ArticuloId</td>
+                            <td>@item.Descripcion</td>
+                            <td>@item.Existencia</td>
+                            <td>@item.Costo</td>
+                            <td>@item.ValorInventario</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div>
+            <div class="card-footer">
+                <label for="TotalInventario">Total Inventario</label>
+                <InputNumber @bind-Value="TotalInventario" class="form-control" step="00.2" ReadOnly="true"></InputNumber>
+            </div>
+        </div>
+    </div>
+</EditForm>
+
+@code {
+
+    private List<Articulo> lista { get; set; }
+
+    private string Filtro { get; set; }
+    private string Criterio { get; set; }
+    private decimal TotalInventario { get; set; }
+    public string mensaje;
+
+    protected override void OnInitialized()
+    {
+        lista = new List<Articulo>();
+    }
+
+    private void Buscar()
+    {
+        try
+        {
+            if (Filtro == null)
+            {
+                toast.ShowWarning("Debe seleccionar un Filtro", "Aviso");
+            }
+            else
+            {
+                lista = ArticuloBLL.GetList(a => true);
+
+                if (lista.Count == 0)
+                {
+                    toast.ShowWarning("No hay Articulos Registrados", "Aviso");
+                }
+                else
+                {
+                    mensaje = "";
+                    switch (Filtro)
+                    {
+                        case "Todo":
+                            lista = ArticuloBLL.GetList(e => true);
+                            break;
+                        case "ID":
+                            lista = ArticuloBLL.GetList(e => e.ArticuloId == Convert.ToInt32(Criterio));
+                            break;
+                        case "Descripcion":
+                            lista = ArticuloBLL.GetList(e => e.Descripcion == Criterio);
+                            break;
+                    }
+
+                    SumarInventario();
+                }
+            }
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+    }
+
+    private void SumarInventario()
+    {
+        foreach (var item in lista)
+        {
+            TotalInventario += item.ValorInventario;
+        }
+    }
+}

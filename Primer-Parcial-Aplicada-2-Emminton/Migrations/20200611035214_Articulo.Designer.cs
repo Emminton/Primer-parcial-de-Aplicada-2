@@ -8,7 +8,7 @@ using Primer_Parcial_Aplicada_2_Emminton.DaL;
 namespace Primer_Parcial_Aplicada_2_Emminton.Migrations
 {
     [DbContext(typeof(Contexto))]
-    [Migration("20200611012917_Articulo")]
+    [Migration("20200611035214_Articulo")]
     partial class Articulo
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

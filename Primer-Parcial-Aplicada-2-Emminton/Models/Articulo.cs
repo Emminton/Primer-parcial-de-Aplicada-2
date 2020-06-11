@@ -13,7 +13,7 @@ namespace Primer_Parcial_Aplicada_2_Emminton.Models
         [Range(0, 100000, ErrorMessage = "El rango es de 0 a 100000")]
         public int ArticuloId { get; set; }
         [Required(ErrorMessage ="El Campo descripcion no puede estar vacio.")]
-        [MinLength(10, ErrorMessage ="La descripcion debe tener minimo (10 caracteres).")]
+        [MinLength(5, ErrorMessage ="La descripcion debe tener minimo (10 caracteres).")]
         [MaxLength(100, ErrorMessage = "La descripcion pasa el maximo de  (100 caracteres).")]
         public string Descripcion { get; set; }
         [Required(ErrorMessage = "Este campo no puede estar vacio.")]

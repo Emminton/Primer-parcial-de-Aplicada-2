@@ -12,12 +12,12 @@ namespace Primer_Parcial_Aplicada_2_Emminton.BLL
     {
         public static bool Guardar(Articulo articulo)
         {
-            if (Existe(articulo.ArticuloId))
+            if (!Existe(articulo.ArticuloId))
+
                 return Insertar(articulo);
             else
                 return Modificar(articulo);
         }
-
         private static bool Insertar(Articulo articulo)
         {
             bool paso = false;

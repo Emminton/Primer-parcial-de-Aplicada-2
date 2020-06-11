@@ -32,22 +32,22 @@
                         </div>
                     </div>
 
-                    <div class="form-group">
+                    <di class="form-group">
                         <label>Descripción:</label>
                         <InputText @bind-Value="articulo.Descripcion" class="form-control" />
                         <ValidationMessage For="@(() => articulo.Descripcion)" />
+                    </di>
+
+                    <div class="form-group">
+                        <label>Existencia</label>
+                        <InputNumber @bind-Value="articulo.Existencia" @oninput="Calcularinventario" @onfocus="Calcularinventario" @onfocusin="Calcularinventario" @onfocusout="Calcularinventario" @onchange="Calcularinventario" class="form-control"></InputNumber>
+                        <ValidationMessage For="(()=> articulo.Existencia)"></ValidationMessage>
                     </div>
 
                     <div class="form-group">
-                        <label>Existencia:</label>
-                        <InputNumber @bind-Value="articulo.Existencia" @onclick="Calcularinventario" class="form-control" />
-                        <ValidationMessage For="@(() => articulo.Existencia)" />
-                    </div>
-
-                    <div class="form-group">
-                        <label>Costo:</label>
-                        <InputNumber @bind-Value="articulo.Costo" @onclick="Calcularinventario" class="form-control" />
-                        <ValidationMessage For="@(() => articulo.Costo)" />
+                        <label>Costos</label>
+                        <InputNumber @bind-Value="articulo.Costo" @oninput="Calcularinventario" @onfocus="Calcularinventario" @onfocusin="Calcularinventario" @onfocusout="Calcularinventario" @onchange="Calcularinventario" class="form-control"></InputNumber>
+                        <ValidationMessage For="(()=> articulo.Costo)"></ValidationMessage>
                     </div>
 
                     <div class="form-group">
@@ -76,16 +76,26 @@
 @code {
     public Articulo articulo { get; set; }
 
+    public int ArticuloId { get; set; }
+
     private void Nuevo()
     {
-        articulo = new Articulo();
+        this.articulo = new Articulo();
     }
+
 
     protected override void OnInitialized()
     {
         Nuevo();
-
-        Buscar();
+        Articulo auxProducto;
+        if (ArticuloId > 0)
+        {
+            auxProducto = ArticuloBLL.Buscar(ArticuloId);
+            if (auxProducto != null)
+                articulo = auxProducto;
+            else
+                toast.ShowInfo("No encontrado..");
+        }
     }
     private void Guardar()
     {
@@ -94,7 +104,6 @@
 
         if (guardar)
         {
-
             Nuevo();
             toast.ShowSuccess("El Articulo se guardo");
         }
@@ -107,8 +116,8 @@
 
     private void Calcularinventario()
     {
-        decimal invetario = articulo.Existencia * articulo.Costo;
-        invetario = articulo.ValorInventario;
+        articulo.ValorInventario = articulo.Existencia * articulo.Costo;
+        
     }
 
     private void Buscar()
@@ -141,4 +150,8 @@
 
         }
     }
+
+
+
+   
 }
